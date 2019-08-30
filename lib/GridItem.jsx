@@ -47,6 +47,7 @@ type Props = {
   // Draggability
   cancel: string,
   handle: string,
+  resizeHandles: Array<"s" | "w" | "e" | "n" | "sw" | "nw" | "se" | "ne">,
 
   x: number,
   y: number,
@@ -142,7 +143,9 @@ export default class GridItem extends React.Component<Props, State> {
     // Selector for draggable handle
     handle: PropTypes.string,
     // Selector for draggable cancel (see react-draggable)
-    cancel: PropTypes.string
+    cancel: PropTypes.string,
+
+    resizeHandles: PropTypes.arrayOf(PropTypes.string)
   };
 
   static defaultProps = {
@@ -152,7 +155,8 @@ export default class GridItem extends React.Component<Props, State> {
     minH: 1,
     minW: 1,
     maxH: Infinity,
-    maxW: Infinity
+    maxW: Infinity,
+    resizeHandles: ["se"]
   };
 
   state: State = {
@@ -335,7 +339,7 @@ export default class GridItem extends React.Component<Props, State> {
     child: ReactElement<any>,
     position: Position
   ): ReactElement<any> {
-    const { cols, x, minW, minH, maxW, maxH } = this.props;
+    const { cols, x, minW, minH, maxW, maxH, resizeHandles } = this.props;
 
     // This is the max possible width - doesn't go to infinity because of the width of the window
     const maxWidth = this.calcPosition(0, 0, cols - x, 0).width;
@@ -357,6 +361,7 @@ export default class GridItem extends React.Component<Props, State> {
         onResizeStop={this.onResizeHandler("onResizeStop")}
         onResizeStart={this.onResizeHandler("onResizeStart")}
         onResize={this.onResizeHandler("onResize")}
+        resizeHandles={resizeHandles}
       >
         {child}
       </Resizable>
@@ -412,7 +417,6 @@ export default class GridItem extends React.Component<Props, State> {
             "onDragHandler called with unrecognized handlerName: " + handlerName
           );
       }
-
       const { x, y } = this.calcXY(newPosition.top, newPosition.left);
 
       return handler.call(this, this.props.i, x, y, { e, node, newPosition });
@@ -449,6 +453,8 @@ export default class GridItem extends React.Component<Props, State> {
       h = Math.max(Math.min(h, maxH), minH);
 
       this.setState({ resizing: handlerName === "onResizeStop" ? null : size });
+
+      console.log("onResizeHandler", w, h);
 
       handler.call(this, i, w, h, { e, node, size });
     };

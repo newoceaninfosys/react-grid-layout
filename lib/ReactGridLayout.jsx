@@ -49,6 +49,7 @@ export type Props = {
   cols: number,
   draggableCancel: string,
   draggableHandle: string,
+  resizeHandles: Array<"s" | "w" | "e" | "n" | "sw" | "nw" | "se" | "ne">,
   verticalCompact: boolean,
   compactType: ?("horizontal" | "vertical"),
   layout: Layout,
@@ -102,6 +103,8 @@ export default class ReactGridLayout extends React.Component<Props, State> {
     draggableCancel: PropTypes.string,
     // A selector for the draggable handler
     draggableHandle: PropTypes.string,
+
+    resizeHandles: PropTypes.arrayOf(PropTypes.string),
 
     // Deprecated
     verticalCompact: function(props: Props) {
@@ -260,7 +263,7 @@ export default class ReactGridLayout extends React.Component<Props, State> {
     this.onLayoutMaybeChanged(this.state.layout, this.props.layout);
   }
 
-  componentWillReceiveProps(nextProps: Props) {
+  UNSAFE_componentWillReceiveProps(nextProps: Props) {
     let newLayoutBase;
     // Legacy support for compactType
     // Allow parent to set layout directly.
@@ -579,7 +582,8 @@ export default class ReactGridLayout extends React.Component<Props, State> {
       isResizable,
       useCSSTransforms,
       draggableCancel,
-      draggableHandle
+      draggableHandle,
+      resizeHandles
     } = this.props;
     const { mounted } = this.state;
 
@@ -601,6 +605,7 @@ export default class ReactGridLayout extends React.Component<Props, State> {
         rowHeight={rowHeight}
         cancel={draggableCancel}
         handle={draggableHandle}
+        resizeHandles={resizeHandles}
         onDragStop={this.onDragStop}
         onDragStart={this.onDragStart}
         onDrag={this.onDrag}
