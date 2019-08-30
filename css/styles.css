@@ -39,6 +39,8 @@
   bottom: 0;
   right: 0;
   cursor: se-resize;
+  background: none !important;
+  padding: 0 !important;
 }
 
 .react-grid-item > .react-resizable-handle-sw {
@@ -141,8 +143,8 @@
 .react-grid-item > .react-resizable-handle::after {
   content: "";
   position: absolute;
-  width: 10;
-  height: 10;
+  width: 10px;
+  height: 10px;
   opacity: 0.3;
 }
 
